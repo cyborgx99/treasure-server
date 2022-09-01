@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { configValidationSchema } from './configValidation';
 import { AuthModule } from './auth/auth.module';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
       validationSchema: configValidationSchema,
     }),
     AuthModule,
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService],
