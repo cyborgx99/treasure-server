@@ -21,3 +21,7 @@ export class LoginResponseDto {
   token: string;
   user: User;
 }
+
+export class GetMeResponse {
+  user: User;
+}
