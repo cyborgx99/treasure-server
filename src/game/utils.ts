@@ -7,165 +7,137 @@ import {
 } from './dto/game.dto';
 import { v4 as uuid } from 'uuid';
 
-const tiles: TileWithContent[] = [
-  {
-    row: 1,
-    col: 1,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 1,
-    col: 2,
-    content: TileContent.TREASURE,
-    isRevealed: false,
-  },
-  {
-    row: 1,
-    col: 3,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 1,
-    col: 4,
-    content: TileContent.TWO,
-    isRevealed: false,
-  },
-  {
-    row: 1,
-    col: 5,
-    content: TileContent.ONE,
-    isRevealed: false,
-  },
+type TileMap = {
+  [key: string]: TileWithContent;
+};
 
-  {
-    row: 2,
-    col: 1,
-    content: TileContent.TWO,
+const generateTileObject = (row: number, col: number, content: TileContent) => {
+  const generatedTile = {
+    row: row,
+    col: col,
+    content: content,
     isRevealed: false,
-  },
-  {
-    row: 2,
-    col: 2,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 2,
-    col: 3,
-    content: TileContent.TWO,
-    isRevealed: false,
-  },
-  {
-    row: 2,
-    col: 4,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 2,
-    col: 5,
-    content: TileContent.TWO,
-    isRevealed: false,
-  },
+  };
 
-  {
-    row: 3,
-    col: 1,
-    content: TileContent.ONE,
-    isRevealed: false,
-  },
-  {
-    row: 3,
-    col: 2,
-    content: TileContent.TWO,
-    isRevealed: false,
-  },
-  {
-    row: 3,
-    col: 3,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 3,
-    col: 4,
-    content: TileContent.TREASURE,
-    isRevealed: false,
-  },
-  {
-    row: 3,
-    col: 5,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
+  return generatedTile;
+};
 
-  {
-    row: 4,
-    col: 1,
-    content: TileContent.TWO,
-    isRevealed: false,
-  },
-  {
-    row: 4,
-    col: 2,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 4,
-    col: 3,
-    content: TileContent.TWO,
-    isRevealed: false,
-  },
-  {
-    row: 4,
-    col: 4,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 4,
-    col: 5,
-    content: TileContent.TWO,
-    isRevealed: false,
-  },
+const generateContent = (
+  tile: Tile,
+  content: TileContent,
+  tileMap: TileMap,
+) => {
+  if (tile.row + 1 <= 5) {
+    const row = tile.row + 1;
+    const col = tile.col;
 
-  {
-    row: 5,
-    col: 1,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 5,
-    col: 2,
-    content: TileContent.TREASURE,
-    isRevealed: false,
-  },
-  {
-    row: 5,
-    col: 3,
-    content: TileContent.THREE,
-    isRevealed: false,
-  },
-  {
-    row: 5,
-    col: 4,
-    content: TileContent.TWO,
-    isRevealed: false,
-  },
-  {
-    row: 5,
-    col: 5,
-    content: TileContent.ONE,
-    isRevealed: false,
-  },
-];
+    const generatedTile = generateTileObject(row, col, content);
 
-// TODO improve generating "algorithm"
-export const generateGameBoard = () => tiles;
+    if (!tileMap[`${generatedTile.row}:${generatedTile.col}`]) {
+      tileMap[`${generatedTile.row}:${generatedTile.col}`] = generatedTile;
+    }
+  }
+  if (tile.row - 1 >= 1) {
+    const row = tile.row - 1;
+    const col = tile.col;
+
+    const generatedTile = generateTileObject(row, col, content);
+
+    if (!tileMap[`${generatedTile.row}:${generatedTile.col}`]) {
+      tileMap[`${generatedTile.row}:${generatedTile.col}`] = generatedTile;
+    }
+  }
+  if (tile.col + 1 <= 5) {
+    const row = tile.row;
+    const col = tile.col + 1;
+
+    const generatedTile = generateTileObject(row, col, content);
+
+    if (!tileMap[`${generatedTile.row}:${generatedTile.col}`]) {
+      tileMap[`${generatedTile.row}:${generatedTile.col}`] = generatedTile;
+    }
+  }
+  if (tile.col - 1 >= 1) {
+    const row = tile.row;
+    const col = tile.col - 1;
+
+    const generatedTile = generateTileObject(row, col, content);
+
+    if (!tileMap[`${generatedTile.row}:${generatedTile.col}`]) {
+      tileMap[`${generatedTile.row}:${generatedTile.col}`] = generatedTile;
+    }
+  }
+};
+
+export const generateEmptyTiles = (maxRow = 5, maxCol = 5): Tile[] => {
+  const tiles: Tile[] = [];
+
+  // generate empty 5x5 board
+  for (let row = 1; row <= maxRow; row++) {
+    for (let col = 1; col <= maxCol; col++) {
+      const tile = {
+        row,
+        col,
+        isRevealed: false,
+      };
+      tiles.push(tile);
+    }
+  }
+
+  return tiles;
+};
+
+//TODO potentially improve the complexity of the generating logic.
+export const generateGameBoard = (): TileWithContent[] => {
+  const tiles = generateEmptyTiles();
+
+  const tileMap: TileMap = {};
+  const copy = [...tiles];
+
+  // shuffling the array and picking 3 random tiles to make them treausres.
+  const shuffled = copy.sort(() => 0.5 - Math.random());
+  const treasures = shuffled.slice(0, 3);
+
+  treasures.forEach((treasure) => {
+    const tile = {
+      ...treasure,
+      content: TileContent.TREASURE,
+      isRevealed: false,
+    };
+
+    tileMap[`${tile.row}:${tile.col}`] = tile;
+
+    // for each treasure generating relevant "3" positions
+    generateContent(tile, TileContent.THREE, tileMap);
+  });
+
+  Object.values(tileMap)
+    .filter((item) => item.content === TileContent.THREE)
+    .forEach((tile) => {
+      // for each "3" generating relevant "2" positions
+      generateContent(tile, TileContent.TWO, tileMap);
+    });
+
+  shuffled.forEach((item) => {
+    const one = {
+      ...item,
+      content: TileContent.ONE,
+      isRevealed: false,
+    };
+
+    if (!tileMap[`${one.row}:${one.col}`]) {
+      tileMap[`${one.row}:${one.col}`] = one;
+    }
+  });
+
+  // maping over the initial tiles to preserve the original position,
+  // and returning the relevant tile with content
+  const result = tiles.map((tile) => {
+    return tileMap[`${tile.row}:${tile.col}`];
+  });
+
+  return result;
+};
 
 export const generateNewGame = (userId: string): GameWithContent => {
   return {
